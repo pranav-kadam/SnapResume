@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.5;
+            padding: 2rem;
+            background-color: #f5f5f5;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .space-y-6 > * + * {
+            margin-top: 1.5rem;
+        }
+
+        .space-y-4 > * + * {
+            margin-top: 1rem;
+        }
+
+        .space-y-2 > * + * {
+            margin-top: 0.5rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            ring: 2px solid #3b82f6;
+        }
+
+        button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+        }
+
+        .btn-outline:hover {
+            background-color: #eff6ff;
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: #6b7280;
+            padding: 0.25rem;
+        }
+
+        .btn-ghost:hover {
+            background-color: #f3f4f6;
+        }
+
+        .section {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <form id="resumeForm" class="space-y-6">
+            <!-- Personal Information -->
+            <div class="space-y-4">
+                <h2>Personal Information</h2>
+                <div class="grid grid-cols-2">
+                    <input type="text" placeholder="Full Name" name="fullName">
+                    <input type="email" placeholder="Email" name="email">
+                    <input type="tel" placeholder="Phone" name="phone">
+                    <input type="text" placeholder="GitHub Username" name="github">
+                    <input type="text" placeholder="LinkedIn Username" name="linkedin">
+                </div>
+            </div>
+
+            <!-- Experience Section -->
+            <div class="space-y-4">
+                <div class="section-header">
+                    <h2>Experience</h2>
+                    <button type="button" class="btn-outline" onclick="addSection('experience')">
+                        <span>+</span> Add Experience
+                    </button>
+                </div>
+                <div id="experienceContainer"></div>
+            </div>
+
+            <!-- Skills Section -->
+            <div class="space-y-4">
+                <h2>Skills</h2>
+                <div class="space-y-4">
+                    <input type="text" placeholder="Programming Languages (comma-separated)" name="skills.programmingLanguages">
+                    <input type="text" placeholder="Technologies/Frameworks (comma-separated)" name="skills.technologies">
+                    <input type="text" placeholder="Databases (comma-separated)" name="skills.databases">
+                    <input type="text" placeholder="Developer Tools (comma-separated)" name="skills.tools">
+                </div>
+            </div>
+
+            <!-- Education Section -->
+            <div class="space-y-4">
+                <div class="section-header">
+                    <h2>Education</h2>
+                    <button type="button" class="btn-outline" onclick="addSection('education')">
+                        <span>+</span> Add Education
+                    </button>
+                </div>
+                <div id="educationContainer"></div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="space-y-4">
+                <div class="section-header">
+                    <h2>Projects</h2>
+                    <button type="button" class="btn-outline" onclick="addSection('projects')">
+                        <span>+</span> Add Project
+                    </button>
+                </div>
+                <div id="projectsContainer"></div>
+            </div>
+
+            <!-- Positions of Responsibility Section -->
+            <div class="space-y-4">
+                <div class="section-header">
+                    <h2>Positions of Responsibility</h2>
+                    <button type="button" class="btn-outline" onclick="addSection('responsibilities')">
+                        <span>+</span> Add Position
+                    </button>
+                </div>
+                <div id="responsibilitiesContainer"></div>
+            </div>
+
+            <!-- Achievements Section -->
+            <div class="space-y-4">
+                <div class="section-header">
+                    <h2>Achievements</h2>
+                    <button type="button" class="btn-outline" onclick="addSection('achievements')">
+                        <span>+</span> Add Achievement
+                    </button>
+                </div>
+                <div id="achievementsContainer"></div>
+            </div>
+
+            <button type="submit" id="submitBtn">Generate Resume</button>
+        </form>
+    </div>
+
+    <script>
+        const formData = {
+            fullName: "",
+            email: "",
+            phone: "",
+            github: "",
+            linkedin: "",
+            experience: [{
+                company: "",
+                location: "",
+                position: "",
+                duration: "",
+                achievements: ["", "", ""]
+            }],
+            projects: [{
+                name: "",
+                technologies: "",
+                link: "",
+                description: ["", ""]
+            }],
+            education: [{
+                university: "",
+                location: "",
+                degree: "",
+                graduationDate: "",
+                gpa: "",
+                coursework: ""
+            }],
+            skills: {
+                programmingLanguages: "",
+                technologies: "",
+                databases: "",
+                tools: ""
+            },
+            responsibilities: [{
+                title: "",
+                duration: "",
+                description: ""
+            }],
+            achievements: ["", ""]
+        };
+
+        function createExperienceHTML(index) {
+            return `
+                <div class="section space-y-4">
+                    ${index > 0 ? `<button type="button" class="btn-ghost remove-btn" onclick="removeSection('experience', ${index})">🗑️</button>` : ''}
+                    <div class="grid grid-cols-2">
+                        <input type="text" placeholder="Company Name" onchange="handleInputChange('experience', 'company', this.value, ${index})">
+                        <input type="text" placeholder="Location" onchange="handleInputChange('experience', 'location', this.value, ${index})">
+                        <input type="text" placeholder="Position" onchange="handleInputChange('experience', 'position', this.value, ${index})">
+                        <input type="text" placeholder="Duration" onchange="handleInputChange('experience', 'duration', this.value, ${index})">
+                    </div>
+                    <div class="space-y-2">
+                        <input type="text" placeholder="Achievement 1" onchange="handleInputChange('experience', 'achievements', this.value, ${index}, 0)">
+                        <input type="text" placeholder="Achievement 2" onchange="handleInputChange('experience', 'achievements', this.value, ${index}, 1)">
+                        <input type="text" placeholder="Achievement 3" onchange="handleInputChange('experience', 'achievements', this.value, ${index}, 2)">
+                    </div>
+                </div>
+            `;
+        }
+
+        function createProjectHTML(index) {
+            return `
+                <div class="section space-y-4">
+                    ${index > 0 ? `<button type="button" class="btn-ghost remove-btn" onclick="removeSection('projects', ${index})">🗑️</button>` : ''}
+                    <div class="grid grid-cols-2">
+                        <input type="text" placeholder="Project Name" onchange="handleInputChange('projects', 'name', this.value, ${index})">
+                        <input type="text" placeholder="Technologies Used" onchange="handleInputChange('projects', 'technologies', this.value, ${index})">
+                        <input type="text" placeholder="Project Link" onchange="handleInputChange('projects', 'link', this.value, ${index})">
+                    </div>
+                    <div class="space-y-2">
+                        <input type="text" placeholder="Description 1" onchange="handleInputChange('projects', 'description', this.value, ${index}, 0)">
+                        <input type="text" placeholder="Description 2" onchange="handleInputChange('projects', 'description', this.value, ${index}, 1)">
+                    </div>
+                </div>
+            `;
+        }
+
+        function createResponsibilityHTML(index) {
+            return `
+                <div class="section space-y-4">
+                    ${index > 0 ? `<button type="button" class="btn-ghost remove-btn" onclick="removeSection('responsibilities', ${index})">🗑️</button>` : ''}
+                    <div class="grid grid-cols-2">
+                        <input type="text" placeholder="Position Title" onchange="handleInputChange('responsibilities', 'title', this.value, ${index})">
+                        <input type="text" placeholder="Duration" onchange="handleInputChange('responsibilities', 'duration', this.value, ${index})">
+                    </div>
+                    <input type="text" placeholder="Description" onchange="handleInputChange('responsibilities', 'description', this.value, ${index})">
+                </div>
+            `;
+        }
+
+        function createAchievementHTML(index) {
+            return `
+                <div class="input-wrapper">
+                    <input type="text" placeholder="Achievement ${index + 1}" onchange="handleInputChange('achievements', null, this.value, ${index})">
+                    ${index > 0 ? `<button type="button" class="btn-ghost remove-btn" onclick="removeSection('achievements', ${index})">🗑️</button>` : ''}
+                </div>
+            `;
+        }
+
+        function createEducationHTML(index) {
+            return `
+                <div class="section space-y-4">
+                    ${index > 0 ? `<button type="button" class="btn-ghost remove-btn" onclick="removeSection('education', ${index})">🗑️</button>` : ''}
+                    <div class="grid grid-cols-2">
+                        <input type="text" placeholder="University Name" onchange="handleInputChange('education', 'university', this.value, ${index})">
+                        <input type="text" placeholder="Location" onchange="handleInputChange('education', 'location', this.value, ${index})">
+                        <input type="text" placeholder="Degree" onchange="handleInputChange('education', 'degree', this.value, ${index})">
+                        <input type="text" placeholder="Graduation Date" onchange="handleInputChange('education', 'graduationDate', this.value, ${index})">
+                        <input type="text" placeholder="GPA" onchange="handleInputChange('education', 'gpa', this.value, ${index})">
+                        <input type="text" placeholder="Relevant Coursework" onchange="handleInputChange('education', 'coursework', this.value, ${index})">
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleInputChange(section, field, value, index = null, subIndex = null) {
+            if (index !== null) {
+                if (subIndex !== null) {
+                    formData[section][index][field][subIndex] = value;
+                } else if (field === null) {
+                    formData[section][index] = value;
+                } else {
+                    formData[section][index][field] = value;
+                }
+            } else if (typeof formData[section] === "object" && !Array.isArray(formData[section])) {
+                formData[section][field] = value;
+            } else {
+                formData[section] = value;
+            }
+        }
+
+        function addSection(section) {
+            const containers = {
+                experience: document.getElementById('experienceContainer'),
+                projects: document.getElementById('projectsContainer'),
+                responsibilities: document.getElementById('responsibilitiesContainer'),
+                achievements: document.getElementById('achievementsContainer'),
+                education: document.getElementById('educationContainer')
+            };
+
+            const templates = {
+                experience: createExperienceHTML,
+                projects: createProjectHTML,
+                responsibilities: createResponsibilityHTML,
+                achievements: createAchievementHTML,
+                education: createEducationHTML
+            };
+
+            const newIndex = formData[section].length;
+            formData[section].push(
+                section === 'experience' ? {
+                    company: "",
+                    location: "",
+                    position: "",
+                    duration: "",
+                    achievements: ["", "", ""]
+                } : section === 'projects' ? {
+                    name: "",
+                    technologies: "",
+                    link: "",
+                    description: ["", ""]
+                } : section === 'responsibilities' ? {
+                    title: "",
+                    duration: "",
+                    description: ""
+                } : section === 'education' ? {
+                    university: "",
+                    location: "",
+                    degree: "",
+                    graduationDate: "",
+                    gpa: "",
+                    coursework: ""
+                } : ""
+            );
+
+            const template = templates[section];
+            const container = containers[section];
+            const div = document.createElement('div');
+            div.innerHTML = template(newIndex);
+            container.appendChild(div);
+        }
+
+        function removeSection(section, index) {
+            formData[section].splice(index, 1);
+            const container = document.getElementById(`${section}Container`);
+            container.children[index].remove();
+        }
+
+        document.getElementById('resumeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner">↻</span> Generating PDF...';
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/generate-resume', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/pdf'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Failed to generate PDF');
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'resume.pdf';
+                document.body
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('Error generating resume:', error);
+                alert('Error generating resume. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Generate Resume';
+            }
+        });
+
+        // Initialize the form with empty sections
+        window.onload = function() {
+            document.getElementById('experienceContainer').innerHTML = createExperienceHTML(0);
+            document.getElementById('projectsContainer').innerHTML = createProjectHTML(0);
+            document.getElementById('responsibilitiesContainer').innerHTML = createResponsibilityHTML(0);
+            document.getElementById('achievementsContainer').innerHTML = createAchievementHTML(0);
+            document.getElementById('educationContainer').innerHTML = createEducationHTML(0);
+
+            // Set up event listeners for the personal information and skills sections
+            document.querySelectorAll('input[name]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const name = e.target.name;
+                    if (name.includes('.')) {
+                        const [section, field] = name.split('.');
+                        handleInputChange(section, field, e.target.value);
+                    } else {
+                        handleInputChange(name, null, e.target.value);
+                    }
+                });
+            });
+        };
+    </script>
+</body>
+</html>

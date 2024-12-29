@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4">
+    <form id="resumeForm" class="max-w-4xl mx-auto space-y-6">
+        <!-- Personal Information -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4">Personal Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" name="full_name" placeholder="Full Name" class="p-2 border rounded" required>
+                <input type="text" name="location" placeholder="Location" class="p-2 border rounded" required>
+                <input type="email" name="email" placeholder="Email" class="p-2 border rounded" required>
+                <input type="tel" name="phone" placeholder="Phone" class="p-2 border rounded" required>
+                <input type="text" name="github" placeholder="GitHub Username" class="p-2 border rounded" required>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4">Education</h2>
+            <div id="educationContainer">
+                <div class="education-entry mb-6 p-4 border rounded">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" name="education[0][school]" placeholder="School" class="p-2 border rounded" required>
+                        <input type="text" name="education[0][location]" placeholder="Location" class="p-2 border rounded" required>
+                        <input type="text" name="education[0][degree]" placeholder="Degree" class="p-2 border rounded" required>
+                        <input type="text" name="education[0][graduation_date]" placeholder="Graduation Date" class="p-2 border rounded" required>
+                        <input type="text" name="education[0][gpa]" placeholder="GPA" class="p-2 border rounded">
+                        <input type="text" name="education[0][coursework]" placeholder="Relevant Coursework" class="p-2 border rounded">
+                        <input type="text" name="education[0][additional_info]" placeholder="Additional Information" class="p-2 border rounded">
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="addSection('education')" class="text-blue-500">+ Add Education</button>
+        </div>
+
+        <!-- Technical Skills -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4">Technical Skills</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <input type="text" name="technical_skills[programming_languages]" placeholder="Programming Languages" class="p-2 border rounded" required>
+                <input type="text" name="technical_skills[libraries_frameworks]" placeholder="Libraries/Frameworks" class="p-2 border rounded" required>
+                <input type="text" name="technical_skills[databases]" placeholder="Databases" class="p-2 border rounded" required>
+                <input type="text" name="technical_skills[devops_cloud]" placeholder="DevOps/Cloud" class="p-2 border rounded" required>
+                <input type="text" name="technical_skills[developer_tools]" placeholder="Developer Tools" class="p-2 border rounded" required>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4">Projects</h2>
+            <div id="projectsContainer">
+                <div class="project-entry mb-6 p-4 border rounded">
+                    <div class="grid grid-cols-1 gap-4">
+                        <input type="text" name="projects[0][name]" placeholder="Project Name" class="p-2 border rounded" required>
+                        <textarea name="projects[0][description]" placeholder="Project Description" class="p-2 border rounded h-24" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="addSection('projects')" class="text-blue-500">+ Add Project</button>
+        </div>
+
+        <!-- Experience -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4">Experience</h2>
+            <div id="experienceContainer">
+                <div class="experience-entry mb-6 p-4 border rounded">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" name="experience[0][company]" placeholder="Company" class="p-2 border rounded" required>
+                        <input type="text" name="experience[0][location]" placeholder="Location" class="p-2 border rounded" required>
+                        <input type="text" name="experience[0][position]" placeholder="Position" class="p-2 border rounded" required>
+                        <input type="text" name="experience[0][duration]" placeholder="Duration" class="p-2 border rounded" required>
+                        <textarea name="experience[0][description]" placeholder="Description" class="p-2 border rounded h-24 md:col-span-2" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="addSection('experience')" class="text-blue-500">+ Add Experience</button>
+        </div>
+
+        <!-- Leadership -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4">Leadership</h2>
+            <div id="leadershipContainer">
+                <div class="leadership-entry mb-6 p-4 border rounded">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" name="leadership[0][organization]" placeholder="Organization" class="p-2 border rounded" required>
+                        <input type="text" name="leadership[0][location]" placeholder="Location" class="p-2 border rounded" required>
+                        <input type="text" name="leadership[0][position]" placeholder="Position" class="p-2 border rounded" required>
+                        <input type="text" name="leadership[0][duration]" placeholder="Duration" class="p-2 border rounded" required>
+                        <textarea name="leadership[0][description]" placeholder="Description" class="p-2 border rounded h-24 md:col-span-2" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="addSection('leadership')" class="text-blue-500">+ Add Leadership</button>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+            Generate Resume
+        </button>
+    </form>
+
+    <script>
+        // Counter for keeping track of section indices
+        const counters = {
+            education: 1,
+            projects: 1,
+            experience: 1,
+            leadership: 1
+        };
+
+        // Function to add new sections
+        function addSection(section) {
+            const container = document.getElementById(`${section}Container`);
+            const template = container.children[0].cloneNode(true);
+            
+            // Update input names with new index
+            const inputs = template.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.name = input.name.replace(`[0]`, `[${counters[section]}]`);
+                input.value = '';
+            });
+
+            // Add remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'absolute top-2 right-2 text-red-500';
+            removeBtn.innerHTML = '×';
+            removeBtn.onclick = function() {
+                template.remove();
+            };
+            template.style.position = 'relative';
+            template.appendChild(removeBtn);
+
+            container.appendChild(template);
+            counters[section]++;
+        }
+
+        // Form submission handler
+        document.getElementById("resumeForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent default form submission
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        const data = {};
+
+        // Organize Form Data into JSON
+        for (let [key, value] of formData.entries()) {
+            const path = key.replace(/\]/g, '').split(/\[|\./); // Parse keys like "education[0][school]"
+            path.reduce((acc, curr, i) => {
+                if (i === path.length - 1) {
+                    acc[curr] = value; // Assign the value at the correct level
+                } else {
+                    acc[curr] = acc[curr] || (isNaN(path[i + 1]) ? {} : []); // Create array or object
+                }
+                return acc[curr];
+            }, data);
+        }
+
+        try {
+            // Send data to the backend
+            const response = await fetch("http://127.0.0.1:8000/generate-resume", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                alert("Error: " + errorText);
+                return;
+            }
+
+            // Handle the response (download PDF)
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "resume.pdf";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            alert("Submission failed: " + error.message);
+        }
+    });
+    </script>
+</body>
+</html>
