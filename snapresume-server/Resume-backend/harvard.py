@@ -1,73 +1,69 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Dict
 from fastapi.middleware.cors import CORSMiddleware
 import tempfile
 import subprocess
 import os
-import logging
+from typing import Optional
 
 app = FastAPI()
-
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Restrict to your domain for production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Data Models
-class Education(BaseModel):
-    school: str
-    location: str
-    degree: str
-    graduation_date: str
-    gpa: Optional[str]
-    coursework: Optional[str]
-    additional_info: Optional[str]
-
-class TechnicalSkill(BaseModel):
-    programming_languages: str
-    libraries_frameworks: str
-    databases: str
-    devops_cloud: str
-    developer_tools: str
-
-class Project(BaseModel):
-    name: str
-    description: str
-
+# Updated models
 class Experience(BaseModel):
     company: str
     location: str
     position: str
     duration: str
-    description: str
+    achievements: List[str]
 
-class Leadership(BaseModel):
-    organization: str
+class Project(BaseModel):
+    name: str
+    technologies: str
+    link: str
+    description: List[str]
+
+class Skills(BaseModel):
+    programmingLanguages: str
+    technologies: str
+    tools: str
+    databases: str  # Added databases field
+
+class Education(BaseModel):
+    university: str
     location: str
-    position: str
+    degree: str
+    graduationDate: str
+    gpa: Optional[str] = ""
+    coursework: Optional[str] = ""
+
+class Responsibility(BaseModel):
+    title: str
     duration: str
     description: str
 
 class ResumeData(BaseModel):
-    full_name: str
-    location: str
+    fullName: str
     email: str
     phone: str
     github: str
-    education: List[Education]
-    technical_skills: TechnicalSkill
-    projects: List[Project]
+    linkedin: str
     experience: List[Experience]
-    leadership: List[Leadership]
+    projects: List[Project]
+    skills: Skills
+    education: List[Education]  # Changed to List
+    responsibilities: List[Responsibility]
+    achievements: List[str]
 
 def escape_latex(text: str) -> str:
-    """Escape special LaTeX characters."""
     chars = {
         '&': r'\&',
         '%': r'\%',
@@ -83,139 +79,133 @@ def escape_latex(text: str) -> str:
     return ''.join(chars.get(c, c) for c in str(text))
 
 def generate_latex(data: ResumeData) -> str:
-    """Generate LaTeX content from resume data."""
-    latex_content = r'''\documentclass[a4paper,10pt]{article}
+    latex_content = r'''
+\documentclass[a4paper,10pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{enumitem}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
+
 \begin{document}
 
 % Name and Contact Information
 \vspace*{-25mm}
 \begin{center}
-    {\huge \textbf{''' + escape_latex(data.full_name) + r'''}} \\
-    ''' + escape_latex(data.location) + r''' $\cdot$ ''' + escape_latex(data.email) + r''' $\cdot$ ''' + escape_latex(data.phone) + r''' $\cdot$ \href{https://github.com/''' + escape_latex(data.github) + r'''}{github.com/''' + escape_latex(data.github) + r'''}
+    {\huge \textbf{''' + escape_latex(data.fullName) + r'''}} \\
+    ''' + escape_latex(data.email) + r''' $\cdot$ ''' + escape_latex(data.phone) + r''' $\cdot$ \href{https://github.com/''' + escape_latex(data.github) + r'''}{github.com/''' + escape_latex(data.github) + r'''} $\cdot$ \href{https://linkedin.com/in/''' + escape_latex(data.linkedin) + r'''}{linkedin.com/in/''' + escape_latex(data.linkedin) + r'''}
 \end{center}
 
 % Education Section
 \vspace*{-7mm}
-\section*{\centering \medium Education}
+\section*{\centering Education}
 \vspace*{-4mm}'''
 
-    # Add Education entries
     for edu in data.education:
+        gpa = f", GPA: {escape_latex(edu.gpa)}" if edu.gpa else ""
         latex_content += r'''
-\textbf{''' + escape_latex(edu.school) + r'''}, ''' + escape_latex(edu.location) + r''' \hfill \textit{''' + escape_latex(edu.graduation_date) + r'''}\\
-''' + escape_latex(edu.degree)
-        if edu.gpa:
-            latex_content += r''', GPA: ''' + escape_latex(edu.gpa)
-        latex_content += r'''\\'''
-        if edu.coursework:
-            latex_content += r'''
-Relevant Coursework: ''' + escape_latex(edu.coursework) + r'''\\'''
-        if edu.additional_info:
-            latex_content += escape_latex(edu.additional_info) + r'''\\'''
+\textbf{''' + escape_latex(edu.university) + r'''}''' + (r''', ''' + escape_latex(edu.location) if edu.location else '') + r''' \hfill \textit{''' + escape_latex(edu.graduationDate) + r'''}\\
+''' + escape_latex(edu.degree) + gpa + r'''\\
+Relevant Coursework: ''' + escape_latex(edu.coursework) + r'''
+'''
 
-    # Technical Skills & Projects
     latex_content += r'''
+% Technical Skills & Projects
 \vspace*{-5mm}
-\section*{\centering \medium Technical Skills \& Projects}
+\section*{\centering Technical Skills \& Projects}
 \vspace*{-4mm}
-\textbf{Programming Languages:} ''' + escape_latex(data.technical_skills.programming_languages) + r'''\\
-\textbf{Libraries/Frameworks:} ''' + escape_latex(data.technical_skills.libraries_frameworks) + r'''\\
-\textbf{Databases:} ''' + escape_latex(data.technical_skills.databases) + r'''\\
-\textbf{DevOps/Cloud:} ''' + escape_latex(data.technical_skills.devops_cloud) + r'''\\
-\textbf{Developer Tools:} ''' + escape_latex(data.technical_skills.developer_tools) + r'''\\'''
+\textbf{Programming Languages:} ''' + escape_latex(data.skills.programmingLanguages) + r'''\\
+\textbf{Technologies/Frameworks:} ''' + escape_latex(data.skills.technologies) + r'''\\
+\textbf{Databases:} ''' + escape_latex(data.skills.databases) + r'''\\
+\textbf{Developer Tools:} ''' + escape_latex(data.skills.tools) + r'''
+'''
 
-    # Add Projects
     for project in data.projects:
         latex_content += r'''
 \textbf{''' + escape_latex(project.name) + r''':}\\
-''' + escape_latex(project.description) + r'''\\'''
+''' + escape_latex(project.technologies) + r'''\\
+''' + escape_latex(project.link) + r'''\\
+\begin{itemize}[noitemsep, topsep=0pt]
+'''
+        for desc in project.description:
+            latex_content += r'''\item ''' + escape_latex(desc) + r'''
+'''
+        latex_content += r'''\end{itemize}
+'''
 
-    # Relevant Experience
     latex_content += r'''
+% Relevant Experience
 \vspace*{-5mm}
-\section*{\centering \medium Relevant Experience}
+\section*{\centering Relevant Experience}
 \vspace*{-4mm}'''
 
     for exp in data.experience:
         latex_content += r'''
-\textbf{''' + escape_latex(exp.company) + r'''}, ''' + escape_latex(exp.location) + r''' \hfill \textit{''' + escape_latex(exp.duration) + r'''}\\
+\textbf{''' + escape_latex(exp.company) + r'''}''' + (', ' + escape_latex(exp.location) if exp.location else '') + r''' \hfill \textit{''' + escape_latex(exp.duration) + r'''}\\
 \textbf{''' + escape_latex(exp.position) + r'''}\\
-''' + escape_latex(exp.description) + r'''\\'''
+\begin{itemize}[noitemsep, topsep=0pt]
+'''
+        for achievement in exp.achievements:
+            latex_content += r'''\item ''' + escape_latex(achievement) + r'''
+'''
+        latex_content += r'''\end{itemize}
+'''
 
-    # Leadership
     latex_content += r'''
+% Leadership
 \vspace*{-5mm}
-\section*{\centering \medium Leadership}
+\section*{\centering Leadership}
 \vspace*{-4mm}'''
 
-    for lead in data.leadership:
+    for resp in data.responsibilities:
         latex_content += r'''
-\textbf{''' + escape_latex(lead.organization) + r'''}, ''' + escape_latex(lead.location) + r''' \hfill \textit{''' + escape_latex(lead.duration) + r'''}\\
-\textbf{''' + escape_latex(lead.position) + r'''}\\
-''' + escape_latex(lead.description) + r'''\\'''
+\textbf{''' + escape_latex(resp.title) + r'''} \hfill \textit{''' + escape_latex(resp.duration) + r'''}\\
+\begin{itemize}[noitemsep, topsep=0pt]
+\item ''' + escape_latex(resp.description) + r'''
+\end{itemize}
+'''
 
-    # Close the document
     latex_content += r'''
 \end{document}'''
 
     return latex_content
 
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+
 @app.post("/generate-resume")
 async def generate_resume(data: ResumeData):
     try:
-        temp_dir = r"C:\Users\Pranav\Desktop\PROJECT\tests\temp"  # Fixed string formatting
-        os.makedirs(temp_dir, exist_ok=True)
-
-        latex_content = generate_latex(data)
-        
-        tex_path = os.path.join(temp_dir, "resume.tex")
-        try:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            latex_content = generate_latex(data)
+            
+            tex_path = os.path.join(temp_dir, "resume.tex")
             with open(tex_path, "w", encoding="utf-8") as f:
                 f.write(latex_content)
-        except Exception as e:
-            logger.error(f"Failed to write TEX file: {str(e)}")
-            raise HTTPException(status_code=500, detail=f"Failed to write TEX file: {str(e)}")
-        
-        for i in range(2):
-            try:
+            
+            for _ in range(2):
                 process = subprocess.run(
                     ["pdflatex", "-interaction=nonstopmode", tex_path],
                     cwd=temp_dir,
                     capture_output=True,
-                    text=True,
-                    check=True
+                    text=True
                 )
-                logger.debug(f"PDFLaTeX run {i+1} output: {process.stdout}")
-            except subprocess.CalledProcessError as e:
-                logger.error(f"PDFLaTeX failed: {e.stderr}")
-                raise HTTPException(status_code=500, detail=f"PDF generation failed: {e.stderr}")
-            except FileNotFoundError:
-                logger.error("pdflatex command not found")
-                raise HTTPException(status_code=500, detail="pdflatex is not installed on the server")
-        
-        pdf_path = os.path.join(temp_dir, "resume.pdf")
-        
-        if not os.path.exists(pdf_path):
-            logger.error("PDF file was not generated")
-            raise HTTPException(status_code=500, detail="PDF file was not generated")
-        
-        try:
+            
+            if process.returncode != 0:
+                error_message = f"LaTeX compilation failed: {process.stderr}"
+                print(error_message)
+                raise HTTPException(status_code=500, detail="PDF generation failed due to LaTeX errors.")
+            
+            pdf_path = os.path.join(temp_dir, "resume.pdf")
+            
+            if not os.path.exists(pdf_path):
+                raise HTTPException(
+                    status_code=500,
+                    detail="PDF file was not generated"
+                )
+            
             with open(pdf_path, "rb") as f:
                 pdf_content = f.read()
-        except Exception as e:
-            logger.error(f"Failed to read PDF file: {str(e)}")
-            raise HTTPException(status_code=500, detail=f"Failed to read PDF file: {str(e)}")
-        
-        try:
+            
             temp_pdf = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
             temp_pdf.write(pdf_content)
             temp_pdf.close()
@@ -226,12 +216,10 @@ async def generate_resume(data: ResumeData):
                 filename="resume.pdf",
                 background=None
             )
-        except Exception as e:
-            logger.error(f"Failed to create response: {str(e)}")
-            raise HTTPException(status_code=500, detail=f"Failed to create response: {str(e)}")
     
-    except HTTPException:
-        raise
     except Exception as e:
-        logger.error(f"Unexpected error: {str(e)}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+        print(f"Error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
