@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Builder</title>
+    <title>Modern Resume Builder</title>
     <style>
         * {
             box-sizing: border-box;
@@ -11,37 +11,49 @@
             padding: 0;
         }
 
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --background: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --ring: rgba(37, 99, 235, 0.2);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.5;
+            line-height: 1.6;
             padding: 2rem;
-            background-color: #f5f5f5;
+            background-color: var(--background);
+            color: var(--text);
         }
 
         .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2.5rem;
         }
 
         .space-y-6 > * + * {
-            margin-top: 1.5rem;
+            margin-top: 2rem;
         }
 
         .space-y-4 > * + * {
-            margin-top: 1rem;
+            margin-top: 1.25rem;
         }
 
         .space-y-2 > * + * {
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
         }
 
         .grid {
             display: grid;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         @media (min-width: 768px) {
@@ -51,16 +63,17 @@
         }
 
         h2 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1.25rem;
         }
 
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .input-wrapper {
@@ -69,71 +82,91 @@
 
         input {
             width: 100%;
-            padding: 0.5rem 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background-color: var(--card);
+            color: var(--text);
+        }
+
+        input::placeholder {
+            color: var(--text-secondary);
         }
 
         input:focus {
             outline: none;
-            border-color: #3b82f6;
-            ring: 2px solid #3b82f6;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--ring);
         }
 
         button {
-            background-color: #3b82f6;
+            background-color: var(--primary);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 0.375rem;
+            border-radius: 0.5rem;
             cursor: pointer;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            transition: all 0.2s;
         }
 
         button:hover {
-            background-color: #2563eb;
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
         }
 
         button:disabled {
-            background-color: #9ca3af;
+            background-color: var(--text-secondary);
             cursor: not-allowed;
+            transform: none;
         }
 
         .btn-outline {
             background-color: transparent;
-            border: 1px solid #3b82f6;
-            color: #3b82f6;
+            border: 2px solid var(--primary);
+            color: var(--primary);
         }
 
         .btn-outline:hover {
-            background-color: #eff6ff;
+            background-color: var(--primary);
+            color: white;
         }
 
         .btn-ghost {
             background-color: transparent;
-            color: #6b7280;
+            color: var(--text-secondary);
             padding: 0.25rem;
+            border-radius: 0.375rem;
         }
 
         .btn-ghost:hover {
-            background-color: #f3f4f6;
+            background-color: var(--background);
+            color: var(--text);
         }
 
         .section {
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
-            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
             position: relative;
+            transition: all 0.2s;
+            background-color: var(--card);
+        }
+
+        .section:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
         .remove-btn {
             position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
+            top: 0.75rem;
+            right: 0.75rem;
         }
 
         @keyframes spin {
@@ -142,6 +175,33 @@
 
         .spinner {
             animation: spin 1s linear infinite;
+        }
+
+        #submitBtn {
+            width: 100%;
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background-color: var(--primary);
+            transition: all 0.3s;
+        }
+
+        #submitBtn:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #0f172a;
+                --card: #1e293b;
+                --text: #f1f5f9;
+                --text-secondary: #94a3b8;
+                --border: #334155;
+                --ring: rgba(37, 99, 235, 0.3);
+            }
         }
     </style>
 </head>
