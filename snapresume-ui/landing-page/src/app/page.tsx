@@ -4,37 +4,15 @@ import { Badge } from "@/components/ui/badge";
 import { Star, FileCheck, Clock, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import Navbar from "@/components/ui/navbar";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen text-white relative overflow-hidden">
+    <div className="min-h-screen text-white relative">
       <div className="absolute inset-0 w-full h-full bg-gradient animate-gradient"></div>
       <div className="relative z-10">
         {/* Navigation */}
-        <nav className="sticky top-4 z-50 mx-4 border border-white/20 bg-black/40 backdrop-blur supports-[backdrop-filter]:bg-black/20 rounded-3xl shadow-lg">
-          <div className="container mx-auto flex h-16 items-center px-4">
-            <div className="flex flex-1 items-center justify-between">
-              <a className="flex items-center space-x-2" href="/">
-                <span className="font-bold text-xl ml-4 sm:ml-16 text-white">SnapResume</span>
-              </a>
-              <div className="flex items-center gap-4 sm:gap-8 mr-4 sm:mr-16">
-                <div className="hidden md:flex items-center gap-6">
-                  <a className="text-sm font-medium transition-colors hover:text-gray-300" href="/portfolio">
-                    Portfolio
-                  </a>
-                  <a className="text-sm font-medium transition-colors hover:text-gray-300" href="/resume">
-                    Resume
-                  </a>
-                  <a className="text-sm font-medium transition-colors hover:text-gray-300" href="/cover-letter">
-                    Cover Letter
-                  </a>
-                </div>
-                <Button className="bg-white text-black hover:bg-gray-200">Get Started</Button>
-              </div>
-            </div>
-          </div>
-        </nav>
-
+        <Navbar/>
         {/* Hero Section */}
         <section className="container px-4 md:px-6 py-12 md:py-24 lg:py-32 relative">
           <div className="flex flex-col items-center space-y-4 text-center">
@@ -84,7 +62,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {templates.map((template, idx) => (
               <Link href={template.href} key={idx}>
-                <div className="group relative overflow-hidden transition-all hover:shadow-lg rounded-xl">
+                <div className="group relative transition-all hover:shadow-lg rounded-xl">
                   <Card className="bg-black/40 border-white/20 backdrop-blur">
                     <CardContent className="p-0">
                       {template.badge && (
@@ -115,7 +93,6 @@ export default function LandingPage() {
         </section>
 
         {/* More Sections */}
-        {/* Reduce redundant component code */}
         {sections.map((section, idx) => (
           <section
             key={idx}
@@ -124,7 +101,7 @@ export default function LandingPage() {
             <div className={section.wrapperClasses}>
               {section.items.map((item, itemIdx) => (
                 <div key={itemIdx} className={item.classes}>
-                  {item.icon && <item.icon className={item.iconClasses} />}
+                  <div className="text-white text-3xl">{item.icon}</div>
                   <h3 className={item.titleClasses}>{item.title}</h3>
                   <p className={item.textClasses}>{item.text}</p>
                 </div>
@@ -170,8 +147,7 @@ const sections = [
       {
         classes:
           "group flex flex-col items-center space-y-4 text-center transition-all hover:scale-105 bg-black/40 backdrop-blur p-6 rounded-xl border border-white/20",
-        icon: Clock,
-        iconClasses: "bg-white/20 p-3 rounded-full transition-colors group-hover:bg-white/30",
+        icon: <Clock />, // Fixed icon rendering
         title: "5-Minute Builder",
         titleClasses: "text-xl font-bold text-white",
         text: "Create a professional resume in minutes with our intuitive builder",
@@ -180,8 +156,7 @@ const sections = [
       {
         classes:
           "group flex flex-col items-center space-y-4 text-center transition-all hover:scale-105 bg-black/40 backdrop-blur p-6 rounded-xl border border-white/20",
-        icon: FileCheck,
-        iconClasses: "bg-white/20 p-3 rounded-full transition-colors group-hover:bg-white/30",
+        icon: <FileCheck />, // Fixed icon rendering
         title: "ATS-Optimized",
         titleClasses: "text-xl font-bold text-white",
         text: "Ensure your resume passes Applicant Tracking Systems every time",
@@ -190,8 +165,7 @@ const sections = [
       {
         classes:
           "group flex flex-col items-center space-y-4 text-center transition-all hover:scale-105 bg-black/40 backdrop-blur p-6 rounded-xl border border-white/20",
-        icon: Star,
-        iconClasses: "bg-white/20 p-3 rounded-full transition-colors group-hover:bg-white/30",
+        icon: <Star />, // Fixed icon rendering
         title: "FAANG-Ready",
         titleClasses: "text-xl font-bold text-white",
         text: "Templates and formats preferred by top tech companies",
