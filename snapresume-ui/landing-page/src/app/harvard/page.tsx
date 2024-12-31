@@ -159,503 +159,538 @@ const Home = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Resume Generator</h1>
-
-      {/* Personal Details */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Personal Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block font-medium">Full Name</label>
-            <input
-              type="text"
-              value={formData.fullName}
-              onChange={(e) => handleChange(e, "fullName")}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-medium">Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleChange(e, "email")}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-medium">Phone</label>
-            <input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleChange(e, "phone")}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-medium">GitHub</label>
-            <input
-              type="url"
-              value={formData.github}
-              onChange={(e) => handleChange(e, "github")}
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block font-medium">LinkedIn</label>
-            <input
-              type="url"
-              value={formData.linkedin}
-              onChange={(e) => handleChange(e, "linkedin")}
-              className="w-full p-2 border rounded"
-            />
-          </div>
+    <div className="min-h-screen bg-gray-50">
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="bg-white shadow-xl rounded-xl p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Professional Resume Generator</h1>
+          <p className="text-gray-600 mt-2">Fill in your details to create a well-formatted resume</p>
         </div>
-      </div>
 
-      {/* Skills */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Skills</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block font-medium">Programming Languages</label>
-            <input
-              type="text"
-              value={formData.skills.programmingLanguages}
-              onChange={(e) => handleChange(e, "skills.programmingLanguages")}
-              className="w-full p-2 border rounded"
-              placeholder="e.g., Python, JavaScript, Java"
-            />
-          </div>
-          <div>
-            <label className="block font-medium">Technologies</label>
-            <input
-              type="text"
-              value={formData.skills.technologies}
-              onChange={(e) => handleChange(e, "skills.technologies")}
-              className="w-full p-2 border rounded"
-              placeholder="e.g., React, Node.js, Docker"
-            />
-          </div>
-          <div>
-            <label className="block font-medium">Tools</label>
-            <input
-              type="text"
-              value={formData.skills.tools}
-              onChange={(e) => handleChange(e, "skills.tools")}
-              className="w-full p-2 border rounded"
-              placeholder="e.g., Git, VS Code, Jira"
-            />
-          </div>
-          <div>
-            <label className="block font-medium">Databases</label>
-            <input
-              type="text"
-              value={formData.skills.databases}
-              onChange={(e) => handleChange(e, "skills.databases")}
-              className="w-full p-2 border rounded"
-              placeholder="e.g., MongoDB, PostgreSQL, MySQL"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Education */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Education</h2>
-        {formData.education.map((edu, index) => (
-          <div key={index} className="mb-4 border p-4 rounded">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium">University</label>
-                <input
-                  type="text"
-                  value={edu.university}
-                  onChange={(e) => handleChange(e, `education.${index}.university`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Location</label>
-                <input
-                  type="text"
-                  value={edu.location}
-                  onChange={(e) => handleChange(e, `education.${index}.location`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Degree</label>
-                <input
-                  type="text"
-                  value={edu.degree}
-                  onChange={(e) => handleChange(e, `education.${index}.degree`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Graduation Date</label>
-                <input
-                  type="text"
-                  value={edu.graduationDate}
-                  onChange={(e) => handleChange(e, `education.${index}.graduationDate`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-medium">GPA</label>
-                <input
-                  type="text"
-                  value={edu.gpa}
-                  onChange={(e) => handleChange(e, `education.${index}.gpa`)}
-                  className="w-full p-2 border rounded"
-                />
-              </div>
+        <form onSubmit={handleSubmit} className="space-y-12">
+          {/* Personal Details */}
+          <section className="space-y-6">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-1 bg-blue-500 rounded-full"></div>
+              <h2 className="text-2xl font-semibold text-gray-800">Personal Details</h2>
             </div>
-            <div className="mt-4">
-              <label className="block font-medium">Coursework</label>
-              <textarea
-                value={edu.coursework}
-                onChange={(e) => handleChange(e, `education.${index}.coursework`)}
-                className="w-full p-2 border rounded"
-                rows={3}
-              ></textarea>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleRemove("education", index)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Remove Education
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() =>
-            handleAdd("education", {
-              university: "",
-              location: "",
-              degree: "",
-              graduationDate: "",
-              gpa: "",
-              coursework: "",
-            })
-          }
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Add Education
-        </button>
-      </div>
-
-      {/* Experience */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Experience</h2>
-        {formData.experience.map((exp, index) => (
-          <div key={index} className="mb-4 border p-4 rounded">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium">Company</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Full Name</label>
                 <input
                   type="text"
-                  value={exp.company}
-                  onChange={(e) => handleChange(e, `experience.${index}.company`)}
-                  className="w-full p-2 border rounded"
+                  value={formData.fullName}
+                  onChange={(e) => handleChange(e, "fullName")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   required
                 />
               </div>
-              <div>
-                <label className="block font-medium">Location</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Email</label>
                 <input
-                  type="text"
-                  value={exp.location}
-                  onChange={(e) => handleChange(e, `experience.${index}.location`)}
-                  className="w-full p-2 border rounded"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange(e, "email")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   required
                 />
               </div>
-              <div>
-                <label className="block font-medium">Position</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Phone</label>
                 <input
-                  type="text"
-                  value={exp.position}
-                  onChange={(e) => handleChange(e, `experience.${index}.position`)}
-                  className="w-full p-2 border rounded"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleChange(e, "phone")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   required
                 />
               </div>
-              <div>
-                <label className="block font-medium">Duration</label>
-                <input
-                  type="text"
-                  value={exp.duration}
-                  onChange={(e) => handleChange(e, `experience.${index}.duration`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-            </div>
-            <div className="mt-4">
-              <label className="block font-medium">Achievements</label>
-              {exp.achievements.map((achievement, achievementIndex) => (
-                <div key={achievementIndex} className="flex gap-2 mt-2">
-                  <input
-                    type="text"
-                    value={achievement}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        e,
-                        `experience.${index}.achievements`,
-                        achievementIndex
-                      )
-                    }
-                    className="flex-1 p-2 border rounded"
-                    placeholder="Enter achievement"
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleRemove(`experience.${index}.achievements`, achievementIndex)
-                    }
-                    className="bg-red-500 text-white px-3 rounded hover:bg-red-600"
-                  >
-                    -
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() =>
-                  handleAdd(`experience.${index}.achievements`, "")
-                }
-                className="mt-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-              >
-                Add Achievement
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleRemove("experience", index)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Remove Experience
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() =>
-            handleAdd("experience", {
-              company: "",
-              location: "",
-              position: "",
-              duration: "",
-              achievements: [""],
-            })
-          }
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Add Experience
-        </button>
-      </div>
-
-      {/* Projects */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Projects</h2>
-        {formData.projects.map((project, index) => (
-          <div key={index} className="mb-4 border p-4 rounded">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium">Project Name</label>
-                <input
-                  type="text"
-                  value={project.name}
-                  onChange={(e) => handleChange(e, `projects.${index}.name`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-medium">Technologies Used</label>
-                <input
-                  type="text"
-                  value={project.technologies}
-                  onChange={(e) => handleChange(e, `projects.${index}.technologies`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-              <div className="md:col-span-2">
-              <label className="block font-medium">Project Link</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">GitHub</label>
                 <input
                   type="url"
-                  value={project.link}
-                  onChange={(e) => handleChange(e, `projects.${index}.link`)}
-                  className="w-full p-2 border rounded"
+                  value={formData.github}
+                  onChange={(e) => handleChange(e, "github")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  placeholder="https://github.com/username"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-medium text-gray-700">LinkedIn</label>
+                <input
+                  type="url"
+                  value={formData.linkedin}
+                  onChange={(e) => handleChange(e, "linkedin")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  placeholder="https://linkedin.com/in/username"
                 />
               </div>
             </div>
-            <div className="mt-4">
-              <label className="block font-medium">Description Points</label>
-              {project.description.map((desc, descIndex) => (
-                <div key={descIndex} className="flex gap-2 mt-2">
-                  <input
-                    type="text"
-                    value={desc}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        e,
-                        `projects.${index}.description`,
-                        descIndex
-                      )
-                    }
-                    className="flex-1 p-2 border rounded"
-                    placeholder="Enter project description"
-                  />
+          </section>
+
+          {/* Skills */}
+          <section className="space-y-6">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-1 bg-green-500 rounded-full"></div>
+              <h2 className="text-2xl font-semibold text-gray-800">Skills</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Programming Languages</label>
+                <input
+                  type="text"
+                  value={formData.skills.programmingLanguages}
+                  onChange={(e) => handleChange(e, "skills.programmingLanguages")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  placeholder="Python, JavaScript, Java"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Technologies</label>
+                <input
+                  type="text"
+                  value={formData.skills.technologies}
+                  onChange={(e) => handleChange(e, "skills.technologies")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  placeholder="React, Node.js, Docker"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Tools</label>
+                <input
+                  type="text"
+                  value={formData.skills.tools}
+                  onChange={(e) => handleChange(e, "skills.tools")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  placeholder="Git, VS Code, Jira"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Databases</label>
+                <input
+                  type="text"
+                  value={formData.skills.databases}
+                  onChange={(e) => handleChange(e, "skills.databases")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  placeholder="MongoDB, PostgreSQL"
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Education */}
+          <section className="space-y-6">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-1 bg-purple-500 rounded-full"></div>
+              <h2 className="text-2xl font-semibold text-gray-800">Education</h2>
+            </div>
+            {formData.education.map((edu, index) => (
+              <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">University</label>
+                    <input
+                      type="text"
+                      value={edu.university}
+                      onChange={(e) => handleChange(e, `education.${index}.university`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Location</label>
+                    <input
+                      type="text"
+                      value={edu.location}
+                      onChange={(e) => handleChange(e, `education.${index}.location`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Degree</label>
+                    <input
+                      type="text"
+                      value={edu.degree}
+                      onChange={(e) => handleChange(e, `education.${index}.degree`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Graduation Date</label>
+                    <input
+                      type="text"
+                      value={edu.graduationDate}
+                      onChange={(e) => handleChange(e, `education.${index}.graduationDate`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">GPA</label>
+                    <input
+                      type="text"
+                      value={edu.gpa}
+                      onChange={(e) => handleChange(e, `education.${index}.gpa`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Coursework</label>
+                  <textarea
+                    value={edu.coursework}
+                    onChange={(e) => handleChange(e, `education.${index}.coursework`)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    rows={3}
+                  ></textarea>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemove("education", index)}
+                  className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                >
+                  Remove Education
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() =>
+                handleAdd("education", {
+                  university: "",
+                  location: "",
+                  degree: "",
+                  graduationDate: "",
+                  gpa: "",
+                  coursework: "",
+                })
+              }
+              className="w-full bg-purple-500 text-white px-4 py-3 rounded-lg hover:bg-purple-600 transition-colors"
+            >
+              Add Education
+            </button>
+          </section>
+
+      {/* Experience */}
+            {/* Experience */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-1 bg-orange-500 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-gray-800">Experience</h2>
+              </div>
+              {formData.experience.map((exp, index) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Company</label>
+                      <input
+                        type="text"
+                        value={exp.company}
+                        onChange={(e) => handleChange(e, `experience.${index}.company`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Location</label>
+                      <input
+                        type="text"
+                        value={exp.location}
+                        onChange={(e) => handleChange(e, `experience.${index}.location`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Position</label>
+                      <input
+                        type="text"
+                        value={exp.position}
+                        onChange={(e) => handleChange(e, `experience.${index}.position`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Duration</label>
+                      <input
+                        type="text"
+                        value={exp.duration}
+                        onChange={(e) => handleChange(e, `experience.${index}.duration`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        placeholder="e.g., Jan 2020 - Present"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-sm font-medium text-gray-700">Achievements</label>
+                    {exp.achievements.map((achievement, achievementIndex) => (
+                      <div key={achievementIndex} className="flex gap-3">
+                        <input
+                          type="text"
+                          value={achievement}
+                          onChange={(e) =>
+                            handleArrayChange(
+                              e,
+                              `experience.${index}.achievements`,
+                              achievementIndex
+                            )
+                          }
+                          className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                          placeholder="Describe your achievement..."
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemove(`experience.${index}.achievements`, achievementIndex)
+                          }
+                          className="bg-red-100 text-red-600 px-4 rounded-lg hover:bg-red-200 transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleAdd(`experience.${index}.achievements`, "")
+                      }
+                      className="mt-2 bg-orange-100 text-orange-600 px-4 py-2 rounded-lg hover:bg-orange-200 transition-colors"
+                    >
+                      Add Achievement
+                    </button>
+                  </div>
                   <button
                     type="button"
-                    onClick={() =>
-                      handleRemove(`projects.${index}.description`, descIndex)
-                    }
-                    className="bg-red-500 text-white px-3 rounded hover:bg-red-600"
+                    onClick={() => handleRemove("experience", index)}
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
                   >
-                    -
+                    Remove Experience
                   </button>
                 </div>
               ))}
               <button
                 type="button"
                 onClick={() =>
-                  handleAdd(`projects.${index}.description`, "")
+                  handleAdd("experience", {
+                    company: "",
+                    location: "",
+                    position: "",
+                    duration: "",
+                    achievements: [""],
+                  })
                 }
-                className="mt-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                className="w-full bg-orange-500 text-white px-4 py-3 rounded-lg hover:bg-orange-600 transition-colors"
               >
-                Add Description Point
+                Add Experience
               </button>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleRemove("projects", index)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Remove Project
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() =>
-            handleAdd("projects", {
-              name: "",
-              technologies: "",
-              link: "",
-              description: [""],
-            })
-          }
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Add Project
-        </button>
-      </div>
+            </section>
 
-      {/* Responsibilities */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Responsibilities</h2>
-        {formData.responsibilities.map((resp, index) => (
-          <div key={index} className="mb-4 border p-4 rounded">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium">Title</label>
-                <input
-                  type="text"
-                  value={resp.title}
-                  onChange={(e) => handleChange(e, `responsibilities.${index}.title`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
+            {/* Projects */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-1 bg-indigo-500 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-gray-800">Projects</h2>
               </div>
-              <div>
-                <label className="block font-medium">Duration</label>
-                <input
-                  type="text"
-                  value={resp.duration}
-                  onChange={(e) => handleChange(e, `responsibilities.${index}.duration`)}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-            </div>
-            <div className="mt-4">
-              <label className="block font-medium">Description</label>
-              <textarea
-                value={resp.description}
-                onChange={(e) => handleChange(e, `responsibilities.${index}.description`)}
-                className="w-full p-2 border rounded"
-                rows={3}
-                required
-              ></textarea>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleRemove("responsibilities", index)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Remove Responsibility
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() =>
-            handleAdd("responsibilities", {
-              title: "",
-              duration: "",
-              description: "",
-            })
-          }
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Add Responsibility
-        </button>
-      </div>
+              {formData.projects.map((project, index) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Project Name</label>
+                      <input
+                        type="text"
+                        value={project.name}
+                        onChange={(e) => handleChange(e, `projects.${index}.name`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Technologies Used</label>
+                      <input
+                        type="text"
+                        value={project.technologies}
+                        onChange={(e) => handleChange(e, `projects.${index}.technologies`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        placeholder="e.g., React, Node.js, MongoDB"
+                        required
+                      />
+                    </div>
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Project Link</label>
+                      <input
+                        type="url"
+                        value={project.link}
+                        onChange={(e) => handleChange(e, `projects.${index}.link`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        placeholder="https://github.com/username/project"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-sm font-medium text-gray-700">Description Points</label>
+                    {project.description.map((desc, descIndex) => (
+                      <div key={descIndex} className="flex gap-3">
+                        <input
+                          type="text"
+                          value={desc}
+                          onChange={(e) =>
+                            handleArrayChange(
+                              e,
+                              `projects.${index}.description`,
+                              descIndex
+                            )
+                          }
+                          className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                          placeholder="Describe your project..."
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemove(`projects.${index}.description`, descIndex)
+                          }
+                          className="bg-red-100 text-red-600 px-4 rounded-lg hover:bg-red-200 transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleAdd(`projects.${index}.description`, "")
+                      }
+                      className="mt-2 bg-indigo-100 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors"
+                    >
+                      Add Description Point
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemove("projects", index)}
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    Remove Project
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  handleAdd("projects", {
+                    name: "",
+                    technologies: "",
+                    link: "",
+                    description: [""],
+                  })
+                }
+                className="w-full bg-indigo-500 text-white px-4 py-3 rounded-lg hover:bg-indigo-600 transition-colors"
+              >
+                Add Project
+              </button>
+            </section>
 
-      {/* Achievements */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">Additional Achievements</h2>
-        {formData.achievements.map((achievement, index) => (
-          <div key={index} className="flex gap-2 mb-2">
-            <input
-              type="text"
-              value={achievement}
-              onChange={(e) => handleArrayChange(e, "achievements", index)}
-              className="flex-1 p-2 border rounded"
-              placeholder="Enter achievement"
-            />
-            <button
-              type="button"
-              onClick={() => handleRemove("achievements", index)}
-              className="bg-red-500 text-white px-3 rounded hover:bg-red-600"
-            >
-              -
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() => handleAdd("achievements", "")}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          Add Achievement
-        </button>
-      </div>
+            {/* Responsibilities */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-1 bg-teal-500 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-gray-800">Responsibilities</h2>
+              </div>
+              {formData.responsibilities.map((resp, index) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Title</label>
+                      <input
+                        type="text"
+                        value={resp.title}
+                        onChange={(e) => handleChange(e, `responsibilities.${index}.title`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Duration</label>
+                      <input
+                        type="text"
+                        value={resp.duration}
+                        onChange={(e) => handleChange(e, `responsibilities.${index}.duration`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Description</label>
+                    <textarea
+                      value={resp.description}
+                      onChange={(e) => handleChange(e, `responsibilities.${index}.description`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                      rows={3}
+                      required
+                    ></textarea>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemove("responsibilities", index)}
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    Remove Responsibility
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  handleAdd("responsibilities", {
+                    title: "",
+                    duration: "",
+                    description: "",
+                  })
+                }
+                className="w-full bg-teal-500 text-white px-4 py-3 rounded-lg hover:bg-teal-600 transition-colors"
+              >
+                Add Responsibility
+              </button>
+            </section>
+
+            {/* Additional Achievements */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-1 bg-pink-500 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-gray-800">Additional Achievements</h2>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+                {formData.achievements.map((achievement, index) => (
+                  <div key={index} className="flex gap-3">
+                    <input
+                      type="text"
+                      value={achievement}
+                      onChange={(e) => handleArrayChange(e, "achievements", index)}
+                      className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                      placeholder="Enter your achievement..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemove("achievements", index)}
+                      className="bg-red-100 text-red-600 px-4 rounded-lg hover:bg-red-200 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => handleAdd("achievements", "")}
+                  className="w-full bg-pink-500 text-white px-4 py-3 rounded-lg hover:bg-pink-600 transition-colors"
+                >
+                  Add Achievement
+                </button>
+              </div>
+            </section>
 
       {/* Submit Button */}
       <div className="mt-8">
@@ -667,6 +702,9 @@ const Home = () => {
         </button>
       </div>
     </form>
+    </div>
+      </div>
+    </div>
   );
 };
 
