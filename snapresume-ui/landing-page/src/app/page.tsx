@@ -117,7 +117,7 @@ export default function LandingPage() {
 // Reusable Data for Features, Templates, and Sections
 const templates = [
   {
-    href: "/faang",
+    href: "/Forms/harvard.html",
     image: "/harvard.png?height=600&width=480",
     alt: "Harvard Resume Template",
     title: "Harvard Resume",
