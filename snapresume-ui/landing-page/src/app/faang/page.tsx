@@ -1,492 +1,711 @@
 "use client"
-import React, { useState } from 'react';
+import { useState } from "react";
 
-interface Education {
-  university: string;
-  location: string;
-  degree: string;
-  graduationDate: string;
-  gpa?: string;
-  coursework?: string;
-}
-
-interface Skills {
-  programmingLanguages: string;
-  technologies: string;
-  tools: string;
-  databases: string;
-}
-
-interface Experience {
-  company: string;
-  location: string;
-  position: string;
-  duration: string;
-  achievements: string[];
-}
-
-interface Project {
-  name: string;
-  technologies: string;
-  link: string;
-  description: string[];
-}
-
-interface Leadership {
-  title: string;
-  duration: string;
-  description: string;
-}
-
-interface FormData {
-  fullName: string;
-  email: string;
-  phone: string;
-  github: string;
-  linkedin: string;
-  education: Education[];
-  skills: Skills;
-  experience: Experience[];
-  projects: Project[];
-  responsibilities: Leadership[];
-}
-
-export default function ResumeForm() {
-  const [formData, setFormData] = useState<FormData>({
-    fullName: '',
-    email: '',
-    phone: '',
-    github: '',
-    linkedin: '',
-    education: [{
-      university: '',
-      location: '',
-      degree: '',
-      graduationDate: '',
-      gpa: '',
-      coursework: ''
-    }],
+const Home = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    github: "",
+    linkedin: "",
+    education: [
+      {
+        university: "",
+        location: "",
+        degree: "",
+        graduationDate: "",
+        gpa: "",
+        coursework: "",
+      },
+    ],
     skills: {
-      programmingLanguages: '',
-      technologies: '',
-      tools: '',
-      databases: ''
+      programmingLanguages: "",
+      technologies: "",
+      tools: "",
+      databases: "",
     },
-    experience: [{
-      company: '',
-      location: '',
-      position: '',
-      duration: '',
-      achievements: ['']
-    }],
-    projects: [{
-      name: '',
-      technologies: '',
-      link: '',
-      description: ['']
-    }],
-    responsibilities: [{
-      title: '',
-      duration: '',
-      description: ''
-    }]
+    experience: [
+      {
+        company: "",
+        location: "",
+        position: "",
+        duration: "",
+        achievements: [""],
+      },
+    ],
+    projects: [
+      {
+        name: "",
+        technologies: "",
+        link: "",
+        description: [""],
+      },
+    ],
+    responsibilities: [
+      {
+        title: "",
+        duration: "",
+        description: "",
+      },
+    ],
+    achievements: [""],
   });
 
-  const addEducation = () => {
-    setFormData(prev => ({
-      ...prev,
-      education: [...prev.education, {
-        university: '',
-        location: '',
-        degree: '',
-        graduationDate: '',
-        gpa: '',
-        coursework: ''
-      }]
-    }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    path: string
+  ) => {
+    const keys = path.split(".");
+    setFormData((prev) => {
+      const obj: any = { ...prev };
+      keys.reduce((acc, key, idx) => {
+        if (idx === keys.length - 1) {
+          acc[key] = e.target.value;
+        }
+        return acc[key];
+      }, obj);
+      return obj;
+    });
   };
 
-  const addExperience = () => {
-    setFormData(prev => ({
-      ...prev,
-      experience: [...prev.experience, {
-        company: '',
-        location: '',
-        position: '',
-        duration: '',
-        achievements: ['']
-      }]
-    }));
+  const handleArrayChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    path: string,
+    index: number
+  ) => {
+    const keys = path.split(".");
+    setFormData((prev) => {
+      const obj: any = { ...prev };
+      keys.reduce((acc, key, idx) => {
+        if (idx === keys.length - 1) {
+          acc[key][index] = e.target.value;
+        }
+        return acc[key];
+      }, obj);
+      return obj;
+    });
   };
 
-  const addProject = () => {
-    setFormData(prev => ({
-      ...prev,
-      projects: [...prev.projects, {
-        name: '',
-        technologies: '',
-        link: '',
-        description: ['']
-      }]
-    }));
+  const handleAdd = (path: string, newItem: any) => {
+    const keys = path.split(".");
+    setFormData((prev) => {
+      const obj: any = { ...prev };
+      keys.reduce((acc, key, idx) => {
+        if (idx === keys.length - 1) {
+          acc[key].push(newItem);
+        }
+        return acc[key];
+      }, obj);
+      return obj;
+    });
   };
 
-  const addResponsibility = () => {
-    setFormData(prev => ({
-      ...prev,
-      responsibilities: [...prev.responsibilities, {
-        title: '',
-        duration: '',
-        description: ''
-      }]
-    }));
+  const handleRemove = (path: string, index: number) => {
+    const keys = path.split(".");
+    setFormData((prev) => {
+      const obj: any = { ...prev };
+      keys.reduce((acc, key, idx) => {
+        if (idx === keys.length - 1) {
+          acc[key].splice(index, 1);
+        }
+        return acc[key];
+      }, obj);
+      return obj;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+  
     try {
-      const response = await fetch('http://localhost:8000/generate-resume', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/generate-resume", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  
+      if (response.ok) {
+        // Get the PDF as a blob
+        const blob = await response.blob();
+        
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(blob);
+        
+        // Create a temporary anchor element to trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'resume.pdf'; // Set the download filename
+        
+        // Append to document, click, and cleanup
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Cleanup the URL
+        window.URL.revokeObjectURL(url);
+        
+        alert("Resume downloaded successfully!");
+      } else {
+        const errorText = await response.text();
+        console.error("Server error:", errorText);
+        alert("Error generating resume. Please try again.");
       }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'resume.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error generating resume. Please try again.');
+      console.error("Network error:", error);
+      alert("Failed to generate resume. Please check if the server is running and try again.");
     }
   };
 
-  const updateEducation = (index: number, field: keyof Education, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      education: prev.education.map((edu, i) => 
-        i === index ? { ...edu, [field]: value } : edu
-      )
-    }));
-  };
-
-  const updateExperience = (index: number, field: keyof Experience, value: string | string[]) => {
-    setFormData(prev => ({
-      ...prev,
-      experience: prev.experience.map((exp, i) => 
-        i === index ? { ...exp, [field]: value } : exp
-      )
-    }));
-  };
-
-  const updateProject = (index: number, field: keyof Project, value: string | string[]) => {
-    setFormData(prev => ({
-      ...prev,
-      projects: prev.projects.map((proj, i) => 
-        i === index ? { ...proj, [field]: value } : proj
-      )
-    }));
-  };
-
   return (
-    <div className="bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">Resume Generator</h1>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Personal Information */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                value={formData.fullName}
-                onChange={e => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                placeholder="Full Name"
-                className="border p-2 rounded"
-                required
-              />
-              <input
-                type="email"
-                value={formData.email}
-                onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="Email"
-                className="border p-2 rounded"
-                required
-              />
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder="Phone"
-                className="border p-2 rounded"
-                required
-              />
-              <input
-                type="text"
-                value={formData.github}
-                onChange={e => setFormData(prev => ({ ...prev, github: e.target.value }))}
-                placeholder="GitHub Username"
-                className="border p-2 rounded"
-                required
-              />
-              <input
-                type="text"
-                value={formData.linkedin}
-                onChange={e => setFormData(prev => ({ ...prev, linkedin: e.target.value }))}
-                placeholder="LinkedIn Username"
-                className="border p-2 rounded"
-                required
-              />
+    <div className="min-h-screen bg-gray-50">
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="bg-white shadow-xl rounded-xl p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Professional Resume Generator</h1>
+          <p className="text-gray-600 mt-2">Fill in your details to create a well-formatted resume</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-12">
+          {/* Personal Details */}
+          <section className="space-y-6">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-1 bg-blue-500 rounded-full"></div>
+              <h2 className="text-2xl font-semibold text-gray-800">Personal Details</h2>
             </div>
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Full Name</label>
+                <input
+                  type="text"
+                  value={formData.fullName}
+                  onChange={(e) => handleChange(e, "fullName")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange(e, "email")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Phone</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleChange(e, "phone")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">GitHub</label>
+                <input
+                  type="url"
+                  value={formData.github}
+                  onChange={(e) => handleChange(e, "github")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  placeholder="https://github.com/username"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-medium text-gray-700">LinkedIn</label>
+                <input
+                  type="url"
+                  value={formData.linkedin}
+                  onChange={(e) => handleChange(e, "linkedin")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  placeholder="https://linkedin.com/in/username"
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Skills */}
+          <section className="space-y-6">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-1 bg-green-500 rounded-full"></div>
+              <h2 className="text-2xl font-semibold text-gray-800">Skills</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Programming Languages</label>
+                <input
+                  type="text"
+                  value={formData.skills.programmingLanguages}
+                  onChange={(e) => handleChange(e, "skills.programmingLanguages")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  placeholder="Python, JavaScript, Java"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Technologies</label>
+                <input
+                  type="text"
+                  value={formData.skills.technologies}
+                  onChange={(e) => handleChange(e, "skills.technologies")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  placeholder="React, Node.js, Docker"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Tools</label>
+                <input
+                  type="text"
+                  value={formData.skills.tools}
+                  onChange={(e) => handleChange(e, "skills.tools")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  placeholder="Git, VS Code, Jira"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Databases</label>
+                <input
+                  type="text"
+                  value={formData.skills.databases}
+                  onChange={(e) => handleChange(e, "skills.databases")}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  placeholder="MongoDB, PostgreSQL"
+                />
+              </div>
+            </div>
+          </section>
 
           {/* Education */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Education</h2>
+          <section className="space-y-6">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-1 bg-purple-500 rounded-full"></div>
+              <h2 className="text-2xl font-semibold text-gray-800">Education</h2>
+            </div>
             {formData.education.map((edu, index) => (
-              <div key={index} className="border p-4 rounded mb-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    value={edu.university}
-                    onChange={e => updateEducation(index, 'university', e.target.value)}
-                    placeholder="University"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={edu.location}
-                    onChange={e => updateEducation(index, 'location', e.target.value)}
-                    placeholder="Location"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={edu.degree}
-                    onChange={e => updateEducation(index, 'degree', e.target.value)}
-                    placeholder="Degree"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={edu.graduationDate}
-                    onChange={e => updateEducation(index, 'graduationDate', e.target.value)}
-                    placeholder="Graduation Date"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={edu.gpa}
-                    onChange={e => updateEducation(index, 'gpa', e.target.value)}
-                    placeholder="GPA (optional)"
-                    className="border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    value={edu.coursework}
-                    onChange={e => updateEducation(index, 'coursework', e.target.value)}
-                    placeholder="Relevant Coursework"
-                    className="border p-2 rounded"
-                  />
+              <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">University</label>
+                    <input
+                      type="text"
+                      value={edu.university}
+                      onChange={(e) => handleChange(e, `education.${index}.university`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Location</label>
+                    <input
+                      type="text"
+                      value={edu.location}
+                      onChange={(e) => handleChange(e, `education.${index}.location`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Degree</label>
+                    <input
+                      type="text"
+                      value={edu.degree}
+                      onChange={(e) => handleChange(e, `education.${index}.degree`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Graduation Date</label>
+                    <input
+                      type="text"
+                      value={edu.graduationDate}
+                      onChange={(e) => handleChange(e, `education.${index}.graduationDate`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">GPA</label>
+                    <input
+                      type="text"
+                      value={edu.gpa}
+                      onChange={(e) => handleChange(e, `education.${index}.gpa`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    />
+                  </div>
                 </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Coursework</label>
+                  <textarea
+                    value={edu.coursework}
+                    onChange={(e) => handleChange(e, `education.${index}.coursework`)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    rows={3}
+                  ></textarea>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemove("education", index)}
+                  className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                >
+                  Remove Education
+                </button>
               </div>
             ))}
             <button
               type="button"
-              onClick={addEducation}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              onClick={() =>
+                handleAdd("education", {
+                  university: "",
+                  location: "",
+                  degree: "",
+                  graduationDate: "",
+                  gpa: "",
+                  coursework: "",
+                })
+              }
+              className="w-full bg-purple-500 text-white px-4 py-3 rounded-lg hover:bg-purple-600 transition-colors"
             >
               Add Education
             </button>
-          </div>
+          </section>
 
-          {/* Skills */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Skills</h2>
-            <div className="grid grid-cols-1 gap-4">
-              <input
-                type="text"
-                value={formData.skills.programmingLanguages}
-                onChange={e => setFormData(prev => ({
-                  ...prev,
-                  skills: { ...prev.skills, programmingLanguages: e.target.value }
-                }))}
-                placeholder="Programming Languages"
-                className="border p-2 rounded"
-                required
-              />
-              <input
-                type="text"
-                value={formData.skills.technologies}
-                onChange={e => setFormData(prev => ({
-                  ...prev,
-                  skills: { ...prev.skills, technologies: e.target.value }
-                }))}
-                placeholder="Technologies/Frameworks"
-                className="border p-2 rounded"
-                required
-              />
-              <input
-                type="text"
-                value={formData.skills.tools}
-                onChange={e => setFormData(prev => ({
-                  ...prev,
-                  skills: { ...prev.skills, tools: e.target.value }
-                }))}
-                placeholder="Developer Tools"
-                className="border p-2 rounded"
-                required
-              />
-              <input
-                type="text"
-                value={formData.skills.databases}
-                onChange={e => setFormData(prev => ({
-                  ...prev,
-                  skills: { ...prev.skills, databases: e.target.value }
-                }))}
-                placeholder="Databases"
-                className="border p-2 rounded"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Experience */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Experience</h2>
-            {formData.experience.map((exp, index) => (
-              <div key={index} className="border p-4 rounded mb-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    value={exp.company}
-                    onChange={e => updateExperience(index, 'company', e.target.value)}
-                    placeholder="Company"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={exp.location}
-                    onChange={e => updateExperience(index, 'location', e.target.value)}
-                    placeholder="Location"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={exp.position}
-                    onChange={e => updateExperience(index, 'position', e.target.value)}
-                    placeholder="Position"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={exp.duration}
-                    onChange={e => updateExperience(index, 'duration', e.target.value)}
-                    placeholder="Duration"
-                    className="border p-2 rounded"
-                    required
-                  />
-                </div>
-                <div className="mt-4">
-                  <textarea
-                    value={exp.achievements.join('\n')}
-                    onChange={e => updateExperience(index, 'achievements', e.target.value.split('\n'))}
-                    placeholder="Achievements (one per line)"
-                    className="border p-2 rounded w-full h-32"
-                    required
-                  />
-                </div>
+      {/* Experience */}
+            {/* Experience */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-1 bg-orange-500 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-gray-800">Experience</h2>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addExperience}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Add Experience
-            </button>
-          </div>
+              {formData.experience.map((exp, index) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Company</label>
+                      <input
+                        type="text"
+                        value={exp.company}
+                        onChange={(e) => handleChange(e, `experience.${index}.company`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Location</label>
+                      <input
+                        type="text"
+                        value={exp.location}
+                        onChange={(e) => handleChange(e, `experience.${index}.location`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Position</label>
+                      <input
+                        type="text"
+                        value={exp.position}
+                        onChange={(e) => handleChange(e, `experience.${index}.position`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Duration</label>
+                      <input
+                        type="text"
+                        value={exp.duration}
+                        onChange={(e) => handleChange(e, `experience.${index}.duration`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        placeholder="e.g., Jan 2020 - Present"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-sm font-medium text-gray-700">Achievements</label>
+                    {exp.achievements.map((achievement, achievementIndex) => (
+                      <div key={achievementIndex} className="flex gap-3">
+                        <input
+                          type="text"
+                          value={achievement}
+                          onChange={(e) =>
+                            handleArrayChange(
+                              e,
+                              `experience.${index}.achievements`,
+                              achievementIndex
+                            )
+                          }
+                          className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                          placeholder="Describe your achievement..."
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemove(`experience.${index}.achievements`, achievementIndex)
+                          }
+                          className="bg-red-100 text-red-600 px-4 rounded-lg hover:bg-red-200 transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleAdd(`experience.${index}.achievements`, "")
+                      }
+                      className="mt-2 bg-orange-100 text-orange-600 px-4 py-2 rounded-lg hover:bg-orange-200 transition-colors"
+                    >
+                      Add Achievement
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemove("experience", index)}
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    Remove Experience
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  handleAdd("experience", {
+                    company: "",
+                    location: "",
+                    position: "",
+                    duration: "",
+                    achievements: [""],
+                  })
+                }
+                className="w-full bg-orange-500 text-white px-4 py-3 rounded-lg hover:bg-orange-600 transition-colors"
+              >
+                Add Experience
+              </button>
+            </section>
 
-          {/* Projects */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Projects</h2>
-            {formData.projects.map((project, index) => (
-              <div key={index} className="border p-4 rounded mb-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    value={project.name}
-                    onChange={e => updateProject(index, 'name', e.target.value)}
-                    placeholder="Project Name"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={project.technologies}
-                    onChange={e => updateProject(index, 'technologies', e.target.value)}
-                    placeholder="Technologies Used"
-                    className="border p-2 rounded"
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={project.link}
-                    onChange={e => updateProject(index, 'link', e.target.value)}
-                    placeholder="Project Link"
-                    className="border p-2 rounded"
-                    required
-                  />
-                </div>
-                <div className="mt-4">
-                  <textarea
-                    value={project.description.join('\n')}
-                    onChange={e => updateProject(index, 'description', e.target.value.split('\n'))}
-                    placeholder="Project Description (one point per line)"
-                    className="border p-2 rounded w-full h-32"
-                    required
-                  />
-                </div>
+            {/* Projects */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-1 bg-indigo-500 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-gray-800">Projects</h2>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addProject}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Add Project
-            </button>
-          </div>
+              {formData.projects.map((project, index) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Project Name</label>
+                      <input
+                        type="text"
+                        value={project.name}
+                        onChange={(e) => handleChange(e, `projects.${index}.name`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Technologies Used</label>
+                      <input
+                        type="text"
+                        value={project.technologies}
+                        onChange={(e) => handleChange(e, `projects.${index}.technologies`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        placeholder="e.g., React, Node.js, MongoDB"
+                        required
+                      />
+                    </div>
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Project Link</label>
+                      <input
+                        type="url"
+                        value={project.link}
+                        onChange={(e) => handleChange(e, `projects.${index}.link`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                        placeholder="https://github.com/username/project"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-sm font-medium text-gray-700">Description Points</label>
+                    {project.description.map((desc, descIndex) => (
+                      <div key={descIndex} className="flex gap-3">
+                        <input
+                          type="text"
+                          value={desc}
+                          onChange={(e) =>
+                            handleArrayChange(
+                              e,
+                              `projects.${index}.description`,
+                              descIndex
+                            )
+                          }
+                          className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                          placeholder="Describe your project..."
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemove(`projects.${index}.description`, descIndex)
+                          }
+                          className="bg-red-100 text-red-600 px-4 rounded-lg hover:bg-red-200 transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleAdd(`projects.${index}.description`, "")
+                      }
+                      className="mt-2 bg-indigo-100 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-200 transition-colors"
+                    >
+                      Add Description Point
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemove("projects", index)}
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    Remove Project
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  handleAdd("projects", {
+                    name: "",
+                    technologies: "",
+                    link: "",
+                    description: [""],
+                  })
+                }
+                className="w-full bg-indigo-500 text-white px-4 py-3 rounded-lg hover:bg-indigo-600 transition-colors"
+              >
+                Add Project
+              </button>
+            </section>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600">
-            Generate Resume
-          </button>
-        </form>
+            {/* Responsibilities */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-1 bg-teal-500 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-gray-800">Responsibilities</h2>
+              </div>
+              {formData.responsibilities.map((resp, index) => (
+                <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Title</label>
+                      <input
+                        type="text"
+                        value={resp.title}
+                        onChange={(e) => handleChange(e, `responsibilities.${index}.title`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Duration</label>
+                      <input
+                        type="text"
+                        value={resp.duration}
+                        onChange={(e) => handleChange(e, `responsibilities.${index}.duration`)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Description</label>
+                    <textarea
+                      value={resp.description}
+                      onChange={(e) => handleChange(e, `responsibilities.${index}.description`)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
+                      rows={3}
+                      required
+                    ></textarea>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemove("responsibilities", index)}
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    Remove Responsibility
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  handleAdd("responsibilities", {
+                    title: "",
+                    duration: "",
+                    description: "",
+                  })
+                }
+                className="w-full bg-teal-500 text-white px-4 py-3 rounded-lg hover:bg-teal-600 transition-colors"
+              >
+                Add Responsibility
+              </button>
+            </section>
+
+            {/* Additional Achievements */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-1 bg-pink-500 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-gray-800">Additional Achievements</h2>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+                {formData.achievements.map((achievement, index) => (
+                  <div key={index} className="flex gap-3">
+                    <input
+                      type="text"
+                      value={achievement}
+                      onChange={(e) => handleArrayChange(e, "achievements", index)}
+                      className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all"
+                      placeholder="Enter your achievement..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemove("achievements", index)}
+                      className="bg-red-100 text-red-600 px-4 rounded-lg hover:bg-red-200 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => handleAdd("achievements", "")}
+                  className="w-full bg-pink-500 text-white px-4 py-3 rounded-lg hover:bg-pink-600 transition-colors"
+                >
+                  Add Achievement
+                </button>
+              </div>
+            </section>
+
+      {/* Submit Button */}
+      <div className="mt-8">
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors"
+        >
+          Generate Resume
+        </button>
+      </div>
+    </form>
+    </div>
       </div>
     </div>
   );
-}
+};
+
+export default Home;
