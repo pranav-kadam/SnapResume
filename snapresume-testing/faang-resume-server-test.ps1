@@ -1,6 +1,5 @@
 # Define the API endpoint
-$apiUrl = "http://127.0.0.1:8000/generate-resume"
-
+$apiUrl = "http://34.45.16.181:8000/generate-resume"
 # Create the JSON payload
 $jsonPayload = @{
     fullName = "John Doe"

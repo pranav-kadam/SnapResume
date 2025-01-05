@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-2xl font-bold mb-6 text-center">Resume Generator</h1>
+        
+        <form id="resumeForm" class="space-y-6">
+            <!-- Personal Information -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Personal Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" name="fullName" placeholder="Full Name" class="border p-2 rounded" required>
+                    <input type="email" name="email" placeholder="Email" class="border p-2 rounded" required>
+                    <input type="tel" name="phone" placeholder="Phone" class="border p-2 rounded" required>
+                    <input type="text" name="github" placeholder="GitHub Username" class="border p-2 rounded" required>
+                    <input type="text" name="linkedin" placeholder="LinkedIn Username" class="border p-2 rounded" required>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Education</h2>
+                <div id="educationContainer">
+                    <div class="education-entry border p-4 rounded mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" name="university" placeholder="University" class="border p-2 rounded" required>
+                            <input type="text" name="location" placeholder="Location" class="border p-2 rounded" required>
+                            <input type="text" name="degree" placeholder="Degree" class="border p-2 rounded" required>
+                            <input type="text" name="graduationDate" placeholder="Graduation Date" class="border p-2 rounded" required>
+                            <input type="text" name="gpa" placeholder="GPA (optional)" class="border p-2 rounded">
+                            <input type="text" name="coursework" placeholder="Relevant Coursework" class="border p-2 rounded">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addEducation()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Education</button>
+            </div>
+
+            <!-- Skills -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Skills</h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <input type="text" name="programmingLanguages" placeholder="Programming Languages" class="border p-2 rounded" required>
+                    <input type="text" name="technologies" placeholder="Technologies/Frameworks" class="border p-2 rounded" required>
+                    <input type="text" name="tools" placeholder="Developer Tools" class="border p-2 rounded" required>
+                    <input type="text" name="databases" placeholder="Databases" class="border p-2 rounded" required>
+                </div>
+            </div>
+
+            <!-- Experience -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Experience</h2>
+                <div id="experienceContainer">
+                    <div class="experience-entry border p-4 rounded mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" name="company" placeholder="Company" class="border p-2 rounded" required>
+                            <input type="text" name="location" placeholder="Location" class="border p-2 rounded" required>
+                            <input type="text" name="position" placeholder="Position" class="border p-2 rounded" required>
+                            <input type="text" name="duration" placeholder="Duration" class="border p-2 rounded" required>
+                        </div>
+                        <div class="mt-4">
+                            <textarea name="achievements" placeholder="Achievements (one per line)" class="border p-2 rounded w-full h-32" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addExperience()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Experience</button>
+            </div>
+
+            <!-- Projects -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Projects</h2>
+                <div id="projectContainer">
+                    <div class="project-entry border p-4 rounded mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" name="projectName" placeholder="Project Name" class="border p-2 rounded" required>
+                            <input type="text" name="technologies" placeholder="Technologies Used" class="border p-2 rounded" required>
+                            <input type="text" name="link" placeholder="Project Link" class="border p-2 rounded" required>
+                        </div>
+                        <div class="mt-4">
+                            <textarea name="description" placeholder="Project Description (one point per line)" class="border p-2 rounded w-full h-32" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addProject()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Project</button>
+            </div>
+
+            <!-- Leadership -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Leadership</h2>
+                <div id="responsibilityContainer">
+                    <div class="responsibility-entry border p-4 rounded mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" name="title" placeholder="Title" class="border p-2 rounded" required>
+                            <input type="text" name="duration" placeholder="Duration" class="border p-2 rounded" required>
+                            <textarea name="description" placeholder="Description" class="border p-2 rounded col-span-2" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addResponsibility()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Leadership Role</button>
+            </div>
+
+            <button type="submit" class="w-full bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600">Generate Resume</button>
+        </form>
+    </div>
+
+    <script>
+        function addEducation() {
+            const container = document.getElementById('educationContainer');
+            const template = container.children[0].cloneNode(true);
+            // Clear input values
+            template.querySelectorAll('input').forEach(input => input.value = '');
+            container.appendChild(template);
+        }
+
+        function addExperience() {
+            const container = document.getElementById('experienceContainer');
+            const template = container.children[0].cloneNode(true);
+            template.querySelectorAll('input, textarea').forEach(input => input.value = '');
+            container.appendChild(template);
+        }
+
+        function addProject() {
+            const container = document.getElementById('projectContainer');
+            const template = container.children[0].cloneNode(true);
+            template.querySelectorAll('input, textarea').forEach(input => input.value = '');
+            container.appendChild(template);
+        }
+
+        function addResponsibility() {
+            const container = document.getElementById('responsibilityContainer');
+            const template = container.children[0].cloneNode(true);
+            template.querySelectorAll('input, textarea').forEach(input => input.value = '');
+            container.appendChild(template);
+        }
+
+        document.getElementById('resumeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                fullName: document.querySelector('input[name="fullName"]').value,
+                email: document.querySelector('input[name="email"]').value,
+                phone: document.querySelector('input[name="phone"]').value,
+                github: document.querySelector('input[name="github"]').value,
+                linkedin: document.querySelector('input[name="linkedin"]').value,
+                
+                education: Array.from(document.querySelectorAll('.education-entry')).map(entry => ({
+                    university: entry.querySelector('input[name="university"]').value,
+                    location: entry.querySelector('input[name="location"]').value,
+                    degree: entry.querySelector('input[name="degree"]').value,
+                    graduationDate: entry.querySelector('input[name="graduationDate"]').value,
+                    gpa: entry.querySelector('input[name="gpa"]').value,
+                    coursework: entry.querySelector('input[name="coursework"]').value
+                })),
+                
+                skills: {
+                    programmingLanguages: document.querySelector('input[name="programmingLanguages"]').value,
+                    technologies: document.querySelector('input[name="technologies"]').value,
+                    tools: document.querySelector('input[name="tools"]').value,
+                    databases: document.querySelector('input[name="databases"]').value
+                },
+                
+                experience: Array.from(document.querySelectorAll('.experience-entry')).map(entry => ({
+                    company: entry.querySelector('input[name="company"]').value,
+                    location: entry.querySelector('input[name="location"]').value,
+                    position: entry.querySelector('input[name="position"]').value,
+                    duration: entry.querySelector('input[name="duration"]').value,
+                    achievements: entry.querySelector('textarea[name="achievements"]').value.split('\n').filter(x => x.trim())
+                })),
+                
+                projects: Array.from(document.querySelectorAll('.project-entry')).map(entry => ({
+                    name: entry.querySelector('input[name="projectName"]').value,
+                    technologies: entry.querySelector('input[name="technologies"]').value,
+                    link: entry.querySelector('input[name="link"]').value,
+                    description: entry.querySelector('textarea[name="description"]').value.split('\n').filter(x => x.trim())
+                })),
+                
+                responsibilities: Array.from(document.querySelectorAll('.responsibility-entry')).map(entry => ({
+                    title: entry.querySelector('input[name="title"]').value,
+                    duration: entry.querySelector('input[name="duration"]').value,
+                    description: entry.querySelector('textarea[name="description"]').value
+                })),
+                
+                achievements: [] // Add if needed
+            };
+
+            try {
+                const response = await fetch('http://localhost:8001/generate-resume', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Handle PDF response
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'resume.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating resume. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

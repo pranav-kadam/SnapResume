@@ -117,14 +117,14 @@ export default function LandingPage() {
 // Reusable Data for Features, Templates, and Sections
 const templates = [
   {
-    href: "/Forms/harvard.html",
+    href: "harvard",
     image: "/harvard.png?height=600&width=480",
     alt: "Harvard Resume Template",
     title: "Harvard Resume",
     description: "Clean and professional Harvard-style template",
   },
   {
-    href: "/Forms/faang.html",
+    href: "faang",
     image: "/FAANG.png?height=600&width=480",
     alt: "FAANG Template",
     title: "FAANG Template",
@@ -132,7 +132,7 @@ const templates = [
     badge: "Highly Recommended",
   },
   {
-    href: "/Forms/faang.html",
+    href: "faang",
     image: "/FAANG2.png?height=600&width=480",
     alt: "MMANGA Template",
     title: "MMANGA Template",
