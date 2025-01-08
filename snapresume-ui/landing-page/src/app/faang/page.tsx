@@ -57,6 +57,7 @@ const Home = () => {
   ) => {
     const keys = path.split(".");
     setFormData((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const obj: any = { ...prev };
       keys.reduce((acc, key, idx) => {
         if (idx === keys.length - 1) {
@@ -75,6 +76,7 @@ const Home = () => {
   ) => {
     const keys = path.split(".");
     setFormData((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const obj: any = { ...prev };
       keys.reduce((acc, key, idx) => {
         if (idx === keys.length - 1) {
@@ -85,10 +87,11 @@ const Home = () => {
       return obj;
     });
   };
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleAdd = (path: string, newItem: any) => {
     const keys = path.split(".");
     setFormData((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const obj: any = { ...prev };
       keys.reduce((acc, key, idx) => {
         if (idx === keys.length - 1) {
@@ -103,6 +106,7 @@ const Home = () => {
   const handleRemove = (path: string, index: number) => {
     const keys = path.split(".");
     setFormData((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const obj: any = { ...prev };
       keys.reduce((acc, key, idx) => {
         if (idx === keys.length - 1) {
@@ -118,7 +122,7 @@ const Home = () => {
     e.preventDefault();
   
     try {
-      const response = await fetch("http://localhost:8000/generate-resume", {
+      const response = await fetch("https://34.46.156.181/8000/generate-resume", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
