@@ -1,0 +1,17 @@
+fastapi==0.103.1         # FastAPI framework for building APIs
+uvicorn==0.23.3          # ASGI server for FastAPI
+python-dotenv==1.0.0     # For loading environment variables from .env files
+pydantic[dotenv]==2.3.0  # Pydantic for data validation, with dotenv support
+
+# Google OAuth and Authentication
+google-auth==2.25.0      # For Google authentication
+google-auth-oauthlib==1.1.0 # For Google OAuth2 workflow
+
+# GitHub Integration
+PyGithub==1.59.0         # Python library for GitHub API
+
+# Render Integration
+requests==2.31.0         # For making HTTP requests to the Render API
+
+# Optional (for JSON serialization and utilities)
+orjson==3.9.7            # Fast JSON parsing for performance
