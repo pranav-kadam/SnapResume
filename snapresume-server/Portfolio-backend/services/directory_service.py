@@ -7,7 +7,6 @@ import re
 # Define the app
 app = FastAPI()
 
-# Path to the original project folder
 ORIGINAL_FOLDER = "../../../snapresume-ui/portfolio-demos/templates/"
 OUTPUT_FOLDER = "../../../snapresume-ui/portfolio-demos/samples/"
 
