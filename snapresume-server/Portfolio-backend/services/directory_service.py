@@ -3,12 +3,22 @@ from pydantic import BaseModel
 import os
 import shutil
 import re
+from github import Github
+import base64
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Define the app
 app = FastAPI()
 
 ORIGINAL_FOLDER = "../../../snapresume-ui/portfolio-demos/templates/"
 OUTPUT_FOLDER = "../../../snapresume-ui/portfolio-demos/samples/"
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')  # Add this to your .env file
+
+# Initialize GitHub
+g = Github(GITHUB_TOKEN)
 
 # JSON Input Model
 class UserData(BaseModel):
@@ -19,6 +29,54 @@ class UserData(BaseModel):
     linkedin: str
     experience: list[dict]  # List of experience objects
     projects: list[dict]    # List of project objects
+
+def create_github_repo(user_name: str, local_folder: str):
+    """Create a new GitHub repository and upload files."""
+    try:
+        # Create a new repository
+        user = g.get_user()
+        repo_name = f"{user_name.replace(' ', '-').lower()}-portfolio"
+        repo = user.create_repo(
+            repo_name,
+            description=f"Portfolio website for {user_name}",
+            homepage="",
+            private=False,
+            has_issues=True,
+            has_projects=True,
+            has_wiki=True
+        )
+
+        # Upload all files from the local folder
+        for root, dirs, files in os.walk(local_folder):
+            for file in files:
+                # Get the full path of the file
+                file_path = os.path.join(root, file)
+                
+                # Calculate the relative path for GitHub
+                relative_path = os.path.relpath(file_path, local_folder)
+                
+                # Read the file content
+                with open(file_path, 'rb') as file_content:
+                    content = file_content.read()
+                
+                # Convert binary content to base64
+                content_encoded = base64.b64encode(content).decode()
+                
+                # Create or update file in the repository
+                repo.create_file(
+                    path=relative_path,
+                    message=f"Add {relative_path}",
+                    content=content_encoded,
+                    branch="main"
+                )
+
+        return {
+            "repo_url": repo.html_url,
+            "git_url": repo.clone_url
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating GitHub repository: {e}")
 
 # Function to replace placeholders in the HTML file
 def update_html(json_data, file_path):
@@ -87,10 +145,18 @@ def generate_portfolio(user_data: UserData):
     index_path = os.path.join(user_output_folder, "index.html")
     try:
         update_html(user_data.dict(), index_path)
+        
+        # Create GitHub repository and upload files
+        github_info = create_github_repo(user_data.fullName, user_output_folder)
+        
+        return {
+            "message": "Portfolio generated successfully!",
+            "folder": user_output_folder,
+            "github_repo_url": github_info["repo_url"],
+            "git_clone_url": github_info["git_url"]
+        }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error updating HTML file: {e}")
-
-    return {"message": "Portfolio generated successfully!", "folder": user_output_folder}
+        raise HTTPException(status_code=500, detail=f"Error generating portfolio: {e}")
 
 # Run the server
 # Use this command in terminal: uvicorn <filename>:app --reload
