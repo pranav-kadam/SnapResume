@@ -15,8 +15,8 @@ load_dotenv()
 # Define the app
 app = FastAPI()
 
-ORIGINAL_FOLDER = "../../../snapresume-ui/portfolio-demos/templates/"
-OUTPUT_FOLDER = "../../../snapresume-ui/portfolio-demos/samples/"
+ORIGINAL_FOLDER = "../portfolio-demos/templates/"
+OUTPUT_FOLDER = "../portfolio-demos/samples/"
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 
 # Initialize GitHub
